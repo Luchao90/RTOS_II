@@ -43,6 +43,16 @@ int main( void )
 
    // Create a task in freeRTOS with dynamic memory
    xTaskCreate(
+      Task_B,                     // Function that implements the task.
+      (const char *)"Task_B",     // Text name for the task.
+      configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.
+      0,                          // Parameter passed into the task.
+      tskIDLE_PRIORITY+1,         // Priority at which the task is created.
+      0                           // Pointer to the task created in the system
+   );
+
+   // Create a task in freeRTOS with dynamic memory
+   xTaskCreate(
       Task_C,                     // Function that implements the task.
       (const char *)"Task_C",     // Text name for the task.
       configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.

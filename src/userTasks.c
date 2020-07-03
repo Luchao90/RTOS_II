@@ -55,7 +55,32 @@ void Task_A(void* taskParmPtr) {
 
 void Task_B(void* taskParmPtr) {
 	char msg[LENGTH];
+
+	KEYS_t Tecla_1;
+	KEYS_t Tecla_2;
+	KeyInit(&Tecla_1);
+	KeyInit(&Tecla_2);
+	uint8_t count = 0;
+
+
+
+	while (TRUE) {
+		for (count = 0; count <= KEY_TIMES; count++) {
+			KeyUpdate(&Tecla_1);
+			KeyUpdate(&Tecla_2);
+			vTaskDelay(10 / portTICK_RATE_MS);
+		}
+		if (KeyReleased(&Tecla_1)) {
+			strcpy(msg, "Tecla_1\r\n");
+			xQueueSend(Queue_1, msg, portMAX_DELAY);
+		}
+		if (KeyReleased(&Tecla_2)) {
+			strcpy(msg, "Tecla_2\r\n");
+			xQueueSend(Queue_1, msg, portMAX_DELAY);
+		}
+	}
 }
+
 void Task_C(void* taskParmPtr) {
 	char msg[LENGTH];
 	while (true) {
