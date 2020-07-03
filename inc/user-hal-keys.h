@@ -12,7 +12,7 @@
 #include "sapi.h"
 
 #define KEY_TIMES 		4		//!< Times read
-#define KEY_TIMEOUT		150		//!< Updates Times required for Timeout
+#define KEY_TIMEOUT		5000	//!< Updates Times required for Timeout
 #define KEYS_QUANTITY 	4		//!< Keys quantity
 
 /**
