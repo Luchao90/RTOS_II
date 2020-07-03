@@ -66,12 +66,17 @@ void Task_B(void* taskParmPtr) {
 	KeyInit(&Tecla_1);
 	KeyInit(&Tecla_2);
 
+	for (count = 0; count < KEY_TIMES; count++) {
+		KeyUpdate(&Tecla_1);
+		KeyUpdate(&Tecla_2);
+		vTaskDelay(10 / portTICK_RATE_MS);
+	}
+
 	while (TRUE) {
-		for (count = 0; count < KEY_TIMES; count++) {
-			KeyUpdate(&Tecla_1);
-			KeyUpdate(&Tecla_2);
-			vTaskDelay(10 / portTICK_RATE_MS);
-		}
+
+		KeyUpdate(&Tecla_1);
+		KeyUpdate(&Tecla_2);
+		vTaskDelay(10 / portTICK_RATE_MS);
 
 		if (KeyPressed(&Tecla_1)) {
 			xLastPressedTime_Tecla_1 = xTaskGetTickCount();
@@ -83,13 +88,15 @@ void Task_B(void* taskParmPtr) {
 
 		if (KeyReleased(&Tecla_1)) {
 			xTicks_Tecla_1 = xTaskGetTickCount();
-			sprintf(msg, "TEC1 T%4d\r\n", xTicks_Tecla_1 - xLastPressedTime_Tecla_1);
+			sprintf(msg, "TEC1 T%4d\r\n",
+					xTicks_Tecla_1 - xLastPressedTime_Tecla_1);
 			xQueueSend(Queue_1, msg, portMAX_DELAY);
 
 		}
 		if (KeyReleased(&Tecla_2)) {
 			xTicks_Tecla_2 = xTaskGetTickCount();
-			sprintf(msg, "TEC2 T%4d\r\n", xTicks_Tecla_2 - xLastPressedTime_Tecla_2);
+			sprintf(msg, "TEC2 T%4d\r\n",
+					xTicks_Tecla_2 - xLastPressedTime_Tecla_2);
 			xQueueSend(Queue_1, msg, portMAX_DELAY);
 		}
 	}
