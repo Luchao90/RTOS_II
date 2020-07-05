@@ -31,17 +31,23 @@ int main( void )
 {
    boardInit();
 
-   if( !Task_A_Init(0)) {
-	   while (1);	//Task A could not created.
-   }
+	if (!Task_A_Init(0)) {
+		gpioWrite(LED2, ON);
+		while (1)
+			;	//Task A could not created.
+	}
 
-   if( !Task_B_Init(0)) {
-	   while (1);	//Task C could not created.
-   }
+	if (!Task_B_Init(0)) {
+		gpioWrite(LED2, ON);
+		while (1)
+			;	//Task C could not created.
+	}
 
-   if( !Task_C_Init(0)) {
-	   while (1);	//Task C could not created.
-   }
+	if (!Task_C_Init(0)) {
+		gpioWrite(LED2, ON);
+		while (1)
+			;	//Task C could not created.
+	}
 
    vTaskStartScheduler(); // Initialize scheduler
 

@@ -71,10 +71,8 @@ void Task_A(void* taskParmPtr) {
 void Task_B(void* taskParmPtr) {
 	char msg[LENGTH];
 	uint8_t count = 0;
-	portTickType xTicks_Tecla_1 = 0;
-	portTickType xTicks_Tecla_2 = 0;
-	portTickType xLastPressedTime_Tecla_1 = 0;
-	portTickType xLastPressedTime_Tecla_2 = 0;
+	portTickType xTicks_Tecla_1, xTicks_Tecla_2, xLastPressedTime_Tecla_1,
+			xLastPressedTime_Tecla_2;
 
 	for (count = 0; count < KEY_TIMES; count++) {
 		KeyUpdate(&Tecla_1);
@@ -133,11 +131,11 @@ bool Task_A_Init(void* taskParmPtr) {
 	}
 }
 
-bool Task_B_Init( void* taskParmPtr ) {
-	if(!KeyInit(&Tecla_1)) {
+bool Task_B_Init(void* taskParmPtr) {
+	if (!KeyInit(&Tecla_1)) {
 		return false;
 	}
-	if(!KeyInit(&Tecla_2)) {
+	if (!KeyInit(&Tecla_2)) {
 		return false;
 	}
 	if (Queue_1 == pdFAIL) {
@@ -147,14 +145,13 @@ bool Task_B_Init( void* taskParmPtr ) {
 	}
 }
 
-bool Task_C_Init( void* taskParmPtr ) {
+bool Task_C_Init(void* taskParmPtr) {
 	if (Queue_1 == pdFAIL) {
 		return false;
 	} else {
 		return (Task_C_Create(taskParmPtr));
 	}
 }
-
 
 bool Task_A_Create(void* taskParmPtr) {
 	if (xTaskCreate(Task_A,                // Function that implements the task.
