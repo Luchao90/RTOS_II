@@ -31,35 +31,17 @@ int main( void )
 {
    boardInit();
 
-   // Create a task in freeRTOS with dynamic memory
-   xTaskCreate(
-      Task_A,                     // Function that implements the task.
-      (const char *)"Task_A",     // Text name for the task.
-      configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.
-      0,                          // Parameter passed into the task.
-      tskIDLE_PRIORITY+1,         // Priority at which the task is created.
-      0                           // Pointer to the task created in the system
-   );
+   if( !Task_A_Init(0)) {
+	   while (1);	//Task A could not created.
+   }
 
-   // Create a task in freeRTOS with dynamic memory
-   xTaskCreate(
-      Task_B,                     // Function that implements the task.
-      (const char *)"Task_B",     // Text name for the task.
-      configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.
-      0,                          // Parameter passed into the task.
-      tskIDLE_PRIORITY+1,         // Priority at which the task is created.
-      0                           // Pointer to the task created in the system
-   );
+   if( !Task_B_Init(0)) {
+	   while (1);	//Task C could not created.
+   }
 
-   // Create a task in freeRTOS with dynamic memory
-   xTaskCreate(
-      Task_C,                     // Function that implements the task.
-      (const char *)"Task_C",     // Text name for the task.
-      configMINIMAL_STACK_SIZE*2, // Stack size in words, not bytes.
-      0,                          // Parameter passed into the task.
-      tskIDLE_PRIORITY+1,         // Priority at which the task is created.
-      0                           // Pointer to the task created in the system
-   );
+   if( !Task_C_Init(0)) {
+	   while (1);	//Task C could not created.
+   }
 
    vTaskStartScheduler(); // Initialize scheduler
 

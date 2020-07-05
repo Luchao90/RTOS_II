@@ -33,9 +33,15 @@ extern "C" {
 QueueHandle_t Queue_1;
 /*=====[Prototypes (declarations) of public functions]=======================*/
 
-void Task_A( void* taskParmPtr );  // Task declaration
-void Task_B( void* taskParmPtr );  // Task declaration
-void Task_C( void* taskParmPtr );  // Task declaration
+/**
+ * @brief Initiate Task.
+ * This function implements creation checks and create task.
+ * @param taskParmPtr
+ * @return
+ */
+bool Task_A_Init( void* taskParmPtr );  // Create Task and objects for Task A
+bool Task_B_Init( void* taskParmPtr );  // Create Task and objects for Task B
+bool Task_C_Init( void* taskParmPtr );  // Create Task and objects for Task C
 
 /*=====[Prototypes (declarations) of public interrupt functions]=============*/
 

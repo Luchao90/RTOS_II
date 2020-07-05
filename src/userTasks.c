@@ -24,14 +24,30 @@
 
 /*=====[Definitions of private global variables]=============================*/
 
+KEYS_t Tecla_1;
+KEYS_t Tecla_2;
+
 /*=====[Prototypes (declarations) of private functions]======================*/
+
+/**
+ * @brief Task Create.
+ * Only for short expression.
+ * @param taskParmPtr
+ * @return
+ */
+bool Task_A_Create (void* taskParmPtr);
+bool Task_B_Create (void* taskParmPtr);
+bool Task_C_Create (void* taskParmPtr);
+
+void Task_A( void* taskParmPtr );  // Task declaration
+void Task_B( void* taskParmPtr );  // Task declaration
+void Task_C( void* taskParmPtr );  // Task declaration
 
 /*=====[Implementations of public functions]=================================*/
 
-// Task implementation
+// Task A implementation
 void Task_A(void* taskParmPtr) {
 	const char msg[] = "LED ON\r\n";
-	Queue_1 = xQueueCreate(1, LENGTH);
 
 	gpioWrite( LED, ON);
 
@@ -60,11 +76,6 @@ void Task_B(void* taskParmPtr) {
 	portTickType xTicks_Tecla_2 = 0;
 	portTickType xLastPressedTime_Tecla_1 = 0;
 	portTickType xLastPressedTime_Tecla_2 = 0;
-
-	KEYS_t Tecla_1;
-	KEYS_t Tecla_2;
-	KeyInit(&Tecla_1);
-	KeyInit(&Tecla_2);
 
 	for (count = 0; count < KEY_TIMES; count++) {
 		KeyUpdate(&Tecla_1);
@@ -110,8 +121,80 @@ void Task_C(void* taskParmPtr) {
 	}
 }
 
-
 /*=====[Implementations of interrupt functions]==============================*/
 
 /*=====[Implementations of private functions]================================*/
 
+bool Task_A_Init(void* taskParmPtr) {
+	Queue_1 = xQueueCreate(1, LENGTH);
+	if (Queue_1 == pdFAIL) {
+		return false;
+	} else {
+		return (Task_A_Create(taskParmPtr));
+	}
+}
+
+bool Task_B_Init( void* taskParmPtr ) {
+	if(!KeyInit(&Tecla_1)) {
+		return false;
+	}
+	if(!KeyInit(&Tecla_2)) {
+		return false;
+	}
+	if (Queue_1 == pdFAIL) {
+		return false;
+	} else {
+		return (Task_B_Create(taskParmPtr));
+	}
+}
+
+bool Task_C_Init( void* taskParmPtr ) {
+	if (Queue_1 == pdFAIL) {
+		return false;
+	} else {
+		return (Task_C_Create(taskParmPtr));
+	}
+}
+
+
+bool Task_A_Create(void* taskParmPtr) {
+	if (xTaskCreate(Task_A,                // Function that implements the task.
+			(const char *) "Task_A",     // Text name for the task.
+			configMINIMAL_STACK_SIZE * 2, // Stack size in words, not bytes.
+			0,                          // Parameter passed into the task.
+			tskIDLE_PRIORITY + 1,      // Priority at which the task is created.
+			0                       // Pointer to the task created in the system
+			) == pdFAIL) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+bool Task_B_Create(void* taskParmPtr) {
+	if (xTaskCreate(Task_B,                // Function that implements the task.
+			(const char *) "Task_B",     // Text name for the task.
+			configMINIMAL_STACK_SIZE * 2, // Stack size in words, not bytes.
+			0,                          // Parameter passed into the task.
+			tskIDLE_PRIORITY + 1,      // Priority at which the task is created.
+			0                       // Pointer to the task created in the system
+			) == pdFAIL) {
+		return false;
+	} else {
+		return true;
+	}
+}
+
+bool Task_C_Create(void* taskParmPtr) {
+	if (xTaskCreate(Task_C,                // Function that implements the task.
+			(const char *) "Task_C",     // Text name for the task.
+			configMINIMAL_STACK_SIZE * 2, // Stack size in words, not bytes.
+			0,                          // Parameter passed into the task.
+			tskIDLE_PRIORITY + 1,      // Priority at which the task is created.
+			0                       // Pointer to the task created in the system
+			) == pdFAIL) {
+		return false;
+	} else {
+		return true;
+	}
+}
