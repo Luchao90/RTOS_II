@@ -24,9 +24,6 @@
 
 /*=====[Definitions of private global variables]=============================*/
 
-KEYS_t Tecla_1;
-KEYS_t Tecla_2;
-
 /*=====[Prototypes (declarations) of private functions]======================*/
 
 /**
@@ -71,40 +68,19 @@ void Task_A(void* taskParmPtr) {
 void Task_B(void* taskParmPtr) {
 	char msg[LENGTH];
 	uint8_t count = 0;
-	portTickType xTicks_Tecla_1, xTicks_Tecla_2, xLastPressedTime_Tecla_1,
-			xLastPressedTime_Tecla_2;
+	keyboard_event_t event;
 
 	for (count = 0; count < KEY_TIMES; count++) {
-		KeyUpdate(&Tecla_1);
-		KeyUpdate(&Tecla_2);
+		Keyboard_Update();
 		vTaskDelay(10 / portTICK_RATE_MS);
 	}
 
 	while (TRUE) {
-
-		KeyUpdate(&Tecla_1);
-		KeyUpdate(&Tecla_2);
+		Keyboard_Update();
 		vTaskDelay(10 / portTICK_RATE_MS);
 
-		if (KeyPressed(&Tecla_1)) {
-			xLastPressedTime_Tecla_1 = xTaskGetTickCount();
-		}
-
-		if (KeyPressed(&Tecla_2)) {
-			xLastPressedTime_Tecla_2 = xTaskGetTickCount();
-		}
-
-		if (KeyReleased(&Tecla_1)) {
-			xTicks_Tecla_1 = xTaskGetTickCount();
-			sprintf(msg, "TEC1 T%4d\r\n",
-					xTicks_Tecla_1 - xLastPressedTime_Tecla_1);
-			xQueueSend(Queue_1, msg, portMAX_DELAY);
-
-		}
-		if (KeyReleased(&Tecla_2)) {
-			xTicks_Tecla_2 = xTaskGetTickCount();
-			sprintf(msg, "TEC2 T%4d\r\n",
-					xTicks_Tecla_2 - xLastPressedTime_Tecla_2);
+		if (xQueueReceive(keyboard.Queue_updated, &event, 0) == pdTRUE) {
+			sprintf(msg, "TEC%d T%4d\r\n", event.key_number, event.xTicks);
 			xQueueSend(Queue_1, msg, portMAX_DELAY);
 		}
 	}
@@ -123,7 +99,7 @@ void Task_C(void* taskParmPtr) {
 /*=====[Implementations of private functions]================================*/
 
 bool Task_A_Init(void* taskParmPtr) {
-	Queue_1 = xQueueCreate(1, LENGTH);
+	Queue_1 = xQueueCreate(4, LENGTH);
 	if (Queue_1 == pdFAIL) {
 		return false;
 	} else {
@@ -132,10 +108,7 @@ bool Task_A_Init(void* taskParmPtr) {
 }
 
 bool Task_B_Init(void* taskParmPtr) {
-	if (!KeyInit(&Tecla_1)) {
-		return false;
-	}
-	if (!KeyInit(&Tecla_2)) {
+	if (!Keyboard_Init()) {
 		return false;
 	}
 	if (Queue_1 == pdFAIL) {
