@@ -18,12 +18,12 @@
 /**
  * Key application map.
  */
-enum {
+typedef enum {
 	KEY_MODE,//!< KEY_MODE
 	KEY_DOWN,//!< KEY_DOWN
 	KEY_UP,  //!< KEY_UP
 	KEY_ENTER//!< KEY_ENTER
-};
+} myKeyboard;
 
 /**
  * Enumeration for possible state's machine.

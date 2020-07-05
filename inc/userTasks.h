@@ -17,7 +17,7 @@
 #include "task.h"
 #include "queue.h"
 #include "sapi.h"
-#include "user-hal-keys.h"
+#include "keys-driver.h"
 
 /*=====[C++ - begin]=========================================================*/
 
