@@ -48,11 +48,7 @@ void Task_C( void* taskParmPtr );  // Task declaration
 // Task A implementation
 void Task_A(void* taskParmPtr) {
 	const char msg[] = "LED ON\r\n";
-
-	gpioWrite( LED, ON);
-
-	// Send the task to the locked state for 1 s (delay)
-	vTaskDelay(1000 / portTICK_RATE_MS);
+	bool led_on = false;
 	gpioWrite( LED, OFF);
 
 	// Periodic task every 2000 ms
@@ -62,7 +58,10 @@ void Task_A(void* taskParmPtr) {
 	// ----- Task repeat for ever -------------------------
 	while (TRUE) {
 		gpioToggle( LED);
-		xQueueSend(Queue_1, msg, portMAX_DELAY);
+		led_on ^= 1;
+		if (led_on) {
+			xQueueSend(Queue_1, msg, portMAX_DELAY);
+		}
 		// Send the task to the locked state during xPeriodicity
 		// (periodical delay)
 		vTaskDelayUntil(&xLastWakeTime, xPeriodicity);
